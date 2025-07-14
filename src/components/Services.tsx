@@ -106,9 +106,6 @@ const Services: React.FC = () => {
                 href="tel:9212850560" 
                 className="bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors inline-block"
               >
-                href="tel:9212850560" 
-                className="bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors inline-block"
-              >
                 Call Now
               </a>
             </div>
