@@ -99,12 +99,18 @@ const Services: React.FC = () => {
             </div>
             <div className="bg-gradient-to-br from-blue-50 to-green-50 rounded-xl p-8 text-center">
               <div className="bg-gradient-to-r from-blue-500 to-green-500 text-white text-3xl font-bold py-4 px-8 rounded-xl mb-4">
-                1-800-HTHF-HELP
+                9212850560
               </div>
               <p className="text-gray-600 mb-4">Available 24 hours a day, 7 days a week</p>
-              <button className="bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors">
+              <a 
+                href="tel:9212850560" 
+                className="bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors inline-block"
+              >
+                href="tel:9212850560" 
+                className="bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors inline-block"
+              >
                 Call Now
-              </button>
+              </a>
             </div>
           </div>
         </div>

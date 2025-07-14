@@ -25,8 +25,8 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-800">Phone</h4>
-                    <p className="text-gray-600">Main: +1 (555) 123-4567</p>
-                    <p className="text-gray-600">24/7 Helpline: 1-800-HTHF-HELP</p>
+                    <p className="text-gray-600">Main: <a href="tel:9212850560" className="hover:text-blue-600 transition-colors">9212850560</a></p>
+                    <p className="text-gray-600">24/7 Helpline: <a href="tel:9212850560" className="hover:text-blue-600 transition-colors">9212850560</a></p>
                   </div>
                 </div>
 
@@ -73,9 +73,12 @@ const Contact: React.FC = () => {
                 If you or a family member needs immediate support, our crisis helpline 
                 is available 24/7 with trained counselors ready to help.
               </p>
-              <button className="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors">
-                Call 1-800-HTHF-HELP
-              </button>
+              <a 
+                href="tel:9212850560" 
+                className="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors inline-block"
+              >
+                Call 9212850560
+              </a>
             </div>
           </div>
 
@@ -124,7 +127,7 @@ const Contact: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">How can we help?</label>
                 <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                   <option>I need support for myself or family</option>
-                  <option>I want to volunteer</option>
+                  <option value="volunteer">I want to volunteer</option>
                   <option>I want to make a donation</option>
                   <option>I need information about services</option>
                   <option>Other</option>
