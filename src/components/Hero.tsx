@@ -1,7 +1,10 @@
 import React from 'react';
 import { ArrowRight, Users, Heart, Shield } from 'lucide-react';
+import DonationModal from './DonationModal';
 
 const Hero: React.FC = () => {
+  const [isDonationModalOpen, setIsDonationModalOpen] = React.useState(false);
+
   return (
     <section id="home" className="relative bg-gradient-to-br from-blue-50 via-white to-green-50 min-h-screen flex items-center">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -27,6 +30,13 @@ const Hero: React.FC = () => {
               </button>
               <button className="border-2 border-green-500 text-green-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-green-500 hover:text-white transition-colors">
                 Learn More
+              </button>
+              <button 
+                onClick={() => setIsDonationModalOpen(true)}
+                className="bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-4 rounded-full font-semibold text-lg hover:from-green-700 hover:to-green-800 transition-all transform hover:scale-105 flex items-center justify-center space-x-2"
+              >
+                <Heart size={20} />
+                <span>Donate Now</span>
               </button>
             </div>
 
@@ -93,6 +103,11 @@ const Hero: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      <DonationModal 
+        isOpen={isDonationModalOpen} 
+        onClose={() => setIsDonationModalOpen(false)} 
+      />
     </section>
   );
 };

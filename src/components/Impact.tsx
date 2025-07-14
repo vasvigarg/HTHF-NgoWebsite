@@ -1,7 +1,10 @@
 import React from 'react';
 import { TrendingUp, Users, Heart, Star, Quote } from 'lucide-react';
+import DonationModal from './DonationModal';
 
 const Impact: React.FC = () => {
+  const [isDonationModalOpen, setIsDonationModalOpen] = React.useState(false);
+
   const stats = [
     { number: "5,000+", label: "Families Supported", icon: Users, color: "text-blue-600" },
     { number: "15+", label: "Years of Service", icon: TrendingUp, color: "text-green-600" },
@@ -90,7 +93,10 @@ const Impact: React.FC = () => {
             when it's needed most.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-blue-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-colors">
+            <button 
+              onClick={() => setIsDonationModalOpen(true)}
+              className="bg-white text-blue-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-colors"
+            >
               Donate Today
             </button>
             <button className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-blue-600 transition-colors">
@@ -99,6 +105,11 @@ const Impact: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      <DonationModal 
+        isOpen={isDonationModalOpen} 
+        onClose={() => setIsDonationModalOpen(false)} 
+      />
     </section>
   );
 };

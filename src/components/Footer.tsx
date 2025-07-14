@@ -1,7 +1,10 @@
 import React from 'react';
 import { Heart, Phone, Mail, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import DonationModal from './DonationModal';
 
 const Footer: React.FC = () => {
+  const [isDonationModalOpen, setIsDonationModalOpen] = React.useState(false);
+
   return (
     <footer className="bg-gray-800 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -69,7 +72,10 @@ const Footer: React.FC = () => {
               </div>
             </div>
             <div className="mt-6">
-              <button className="bg-gradient-to-r from-blue-600 to-green-500 text-white px-6 py-3 rounded-full font-semibold hover:from-blue-700 hover:to-green-600 transition-all">
+              <button 
+                onClick={() => setIsDonationModalOpen(true)}
+                className="bg-gradient-to-r from-blue-600 to-green-500 text-white px-6 py-3 rounded-full font-semibold hover:from-blue-700 hover:to-green-600 transition-all"
+              >
                 Get Support Now
               </button>
             </div>
@@ -89,6 +95,11 @@ const Footer: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      <DonationModal 
+        isOpen={isDonationModalOpen} 
+        onClose={() => setIsDonationModalOpen(false)} 
+      />
     </footer>
   );
 };

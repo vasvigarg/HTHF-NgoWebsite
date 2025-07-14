@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Menu, X, Heart, Phone, Mail } from 'lucide-react';
+import DonationModal from './DonationModal';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -52,7 +54,10 @@ const Header: React.FC = () => {
           </div>
 
           <div className="hidden md:flex space-x-4">
-            <button className="bg-green-500 text-white px-6 py-2 rounded-full font-medium hover:bg-green-600 transition-colors">
+            <button 
+              onClick={() => setIsDonationModalOpen(true)}
+              className="bg-green-500 text-white px-6 py-2 rounded-full font-medium hover:bg-green-600 transition-colors"
+            >
               Donate Now
             </button>
             <button className="border-2 border-blue-500 text-blue-500 px-6 py-2 rounded-full font-medium hover:bg-blue-500 hover:text-white transition-colors">
@@ -76,7 +81,10 @@ const Header: React.FC = () => {
               <a href="#impact" className="text-gray-700 font-medium">Impact</a>
               <a href="#contact" className="text-gray-700 font-medium">Contact</a>
               <div className="flex flex-col space-y-2 pt-4">
-                <button className="bg-green-500 text-white px-6 py-2 rounded-full font-medium">
+                <button 
+                  onClick={() => setIsDonationModalOpen(true)}
+                  className="bg-green-500 text-white px-6 py-2 rounded-full font-medium"
+                >
                   Donate Now
                 </button>
                 <button className="border-2 border-blue-500 text-blue-500 px-6 py-2 rounded-full font-medium">
@@ -87,6 +95,11 @@ const Header: React.FC = () => {
           </div>
         )}
       </nav>
+      
+      <DonationModal 
+        isOpen={isDonationModalOpen} 
+        onClose={() => setIsDonationModalOpen(false)} 
+      />
     </header>
   );
 };
