@@ -99,9 +99,14 @@ const Impact: React.FC = () => {
             >
               Donate Today
             </button>
-            <button className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-blue-600 transition-colors">
+            <a 
+              href="https://forms.gle/euWhzmLQDjZcS9Qb6" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-blue-600 transition-colors inline-block text-center"
+            >
               Volunteer With Us
-            </button>
+            </a>
           </div>
         </div>
       </div>

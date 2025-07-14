@@ -17,7 +17,7 @@ const Header: React.FC = () => {
             <div className="flex space-x-6">
               <div className="flex items-center space-x-2">
                 <Phone size={14} />
-                <span>+1 (555) 123-4567</span>
+                <a href="tel:9212850560" className="hover:text-blue-200 transition-colors">9212850560</a>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail size={14} />
@@ -60,9 +60,14 @@ const Header: React.FC = () => {
             >
               Donate Now
             </button>
-            <button className="border-2 border-blue-500 text-blue-500 px-6 py-2 rounded-full font-medium hover:bg-blue-500 hover:text-white transition-colors">
+            <a 
+              href="https://forms.gle/euWhzmLQDjZcS9Qb6" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="border-2 border-blue-500 text-blue-500 px-6 py-2 rounded-full font-medium hover:bg-blue-500 hover:text-white transition-colors inline-block text-center"
+            >
               Volunteer
-            </button>
+            </a>
           </div>
 
           {/* Mobile menu button */}
@@ -87,9 +92,14 @@ const Header: React.FC = () => {
                 >
                   Donate Now
                 </button>
-                <button className="border-2 border-blue-500 text-blue-500 px-6 py-2 rounded-full font-medium">
+                <a 
+                  href="https://forms.gle/euWhzmLQDjZcS9Qb6" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="border-2 border-blue-500 text-blue-500 px-6 py-2 rounded-full font-medium inline-block text-center"
+                >
                   Volunteer
-                </button>
+                </a>
               </div>
             </div>
           </div>
