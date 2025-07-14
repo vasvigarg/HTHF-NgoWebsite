@@ -24,13 +24,19 @@ const Hero: React.FC = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg hover:from-blue-700 hover:to-blue-800 transition-all transform hover:scale-105 flex items-center justify-center space-x-2">
+              <a 
+                href="#contact" 
+                className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg hover:from-blue-700 hover:to-blue-800 transition-all transform hover:scale-105 flex items-center justify-center space-x-2"
+              >
                 <span>Get Support</span>
                 <ArrowRight size={20} />
-              </button>
-              <button className="border-2 border-green-500 text-green-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-green-500 hover:text-white transition-colors">
+              </a>
+              <a 
+                href="#about" 
+                className="border-2 border-green-500 text-green-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-green-500 hover:text-white transition-colors inline-block text-center"
+              >
                 Learn More
-              </button>
+              </a>
               <button 
                 onClick={() => setIsDonationModalOpen(true)}
                 className="bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-4 rounded-full font-semibold text-lg hover:from-green-700 hover:to-green-800 transition-all transform hover:scale-105 flex items-center justify-center space-x-2"

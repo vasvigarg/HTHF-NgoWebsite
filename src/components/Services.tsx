@@ -65,10 +65,13 @@ const Services: React.FC = () => {
                 </div>
                 <h3 className="text-xl font-bold text-gray-800 mb-4">{service.title}</h3>
                 <p className="text-gray-600 leading-relaxed mb-6">{service.description}</p>
-                <button className="text-blue-600 font-semibold hover:text-blue-800 transition-colors flex items-center space-x-2 group">
+                <a 
+                  href="#contact" 
+                  className="text-blue-600 font-semibold hover:text-blue-800 transition-colors flex items-center space-x-2 group"
+                >
                   <span>Learn More</span>
                   <span className="transform group-hover:translate-x-1 transition-transform">→</span>
-                </button>
+                </a>
               </div>
             );
           })}
