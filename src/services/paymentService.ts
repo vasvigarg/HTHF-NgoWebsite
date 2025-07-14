@@ -1,6 +1,4 @@
-// Mock backend service for Razorpay integration
-// In a real application, these would be actual API calls to your backend
-
+// Real backend service for Razorpay integration
 export interface CreateOrderRequest {
   amount: number;
   currency: string;
@@ -22,50 +20,60 @@ export interface VerifyPaymentRequest {
   razorpay_signature: string;
 }
 
-// Mock API endpoints - replace with your actual backend URLs
-const API_BASE_URL = 'http://localhost:3000'; // Your backend URL
+// Backend API base URL
+const API_BASE_URL = 'http://localhost:3001/api';
 
 export const createOrder = async (orderData: CreateOrderRequest): Promise<CreateOrderResponse> => {
-  // Mock response for demo purposes
-  // In production, this would make an actual API call to your backend
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        id: `order_${Date.now()}`,
-        amount: orderData.amount * 100,
-        currency: orderData.currency,
-        receipt: orderData.receipt,
-        status: 'created'
-      });
-    }, 500);
-  });
-  
-  // Actual implementation would be:
-  // const response = await fetch(`${API_BASE_URL}/create-order`, {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify(orderData),
-  // });
-  // return response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/create-order`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to create order');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error creating order:', error);
+    throw error;
+  }
 };
 
 export const verifyPayment = async (paymentData: VerifyPaymentRequest): Promise<{ status: string }> => {
-  // Mock verification for demo purposes
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ status: 'ok' });
-    }, 500);
-  });
-  
-  // Actual implementation would be:
-  // const response = await fetch(`${API_BASE_URL}/verify-payment`, {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify(paymentData),
-  // });
-  // return response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/verify-payment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(paymentData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Payment verification failed');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error verifying payment:', error);
+    throw error;
+  }
+};
+
+// Function to check server health
+export const checkServerHealth = async (): Promise<boolean> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/health`);
+    return response.ok;
+  } catch (error) {
+    console.error('Server health check failed:', error);
+    return false;
+  }
 };

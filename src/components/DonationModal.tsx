@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { X, Heart, CreditCard, Loader } from 'lucide-react';
-import { createOrder, verifyPayment } from '../services/paymentService';
+import React, { useState, useEffect } from 'react';
+import { X, Heart, CreditCard, Loader, AlertCircle, CheckCircle } from 'lucide-react';
+import { createOrder, verifyPayment, checkServerHealth } from '../services/paymentService';
 
 interface DonationModalProps {
   isOpen: boolean;
@@ -20,8 +20,32 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
   const [donorEmail, setDonorEmail] = useState<string>('');
   const [donorPhone, setDonorPhone] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [serverStatus, setServerStatus] = useState<boolean>(false);
+  const [statusMessage, setStatusMessage] = useState<string>('');
 
   const predefinedAmounts = ['500', '1000', '2500', '5000'];
+
+  // Check server status when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      checkServerStatus();
+    }
+  }, [isOpen]);
+
+  const checkServerStatus = async () => {
+    try {
+      const isHealthy = await checkServerHealth();
+      setServerStatus(isHealthy);
+      if (!isHealthy) {
+        setStatusMessage('Payment server is not available. Please try again later.');
+      } else {
+        setStatusMessage('');
+      }
+    } catch (error) {
+      setServerStatus(false);
+      setStatusMessage('Unable to connect to payment server.');
+    }
+  };
 
   const handleAmountSelect = (selectedAmount: string) => {
     setAmount(selectedAmount);
@@ -37,20 +61,52 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
     return customAmount || amount;
   };
 
-  const handleDonate = async () => {
+  const validateForm = () => {
     const finalAmount = getFinalAmount();
     
-    if (!finalAmount || !donorName || !donorEmail) {
-      alert('Please fill in all required fields');
-      return;
+    if (!finalAmount) {
+      setStatusMessage('Please select or enter a donation amount');
+      return false;
     }
-
+    
     if (parseFloat(finalAmount) < 1) {
-      alert('Minimum donation amount is ₹1');
+      setStatusMessage('Minimum donation amount is ₹1');
+      return false;
+    }
+    
+    if (!donorName.trim()) {
+      setStatusMessage('Please enter your full name');
+      return false;
+    }
+    
+    if (!donorEmail.trim()) {
+      setStatusMessage('Please enter your email address');
+      return false;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(donorEmail)) {
+      setStatusMessage('Please enter a valid email address');
+      return false;
+    }
+    
+    setStatusMessage('');
+    return true;
+  };
+
+  const handleDonate = async () => {
+    if (!validateForm()) {
       return;
     }
 
+    if (!serverStatus) {
+      setStatusMessage('Payment server is not available. Please try again later.');
+      return;
+    }
+
+    const finalAmount = getFinalAmount();
     setIsProcessing(true);
+    setStatusMessage('Creating payment order...');
 
     try {
       // Create order
@@ -61,11 +117,21 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
         notes: {
           donor_name: donorName,
           donor_email: donorEmail,
+          donor_phone: donorPhone,
           purpose: 'HTHF Donation'
         }
       };
 
+      console.log('Creating order with data:', orderData);
       const order = await createOrder(orderData);
+      console.log('Order created:', order);
+
+      setStatusMessage('Opening payment gateway...');
+
+      // Check if Razorpay is loaded
+      if (!window.Razorpay) {
+        throw new Error('Razorpay SDK not loaded. Please refresh the page and try again.');
+      }
 
       // Razorpay options
       const options = {
@@ -74,7 +140,7 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
         currency: order.currency,
         name: 'Hands That Heal Foundation',
         description: 'Supporting families through chronic diseases',
-        image: '/favicon.ico', // Add your logo here
+        image: '/favicon.ico',
         order_id: order.id,
         prefill: {
           name: donorName,
@@ -85,7 +151,10 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
           color: '#3B82F6'
         },
         handler: async function (response: any) {
+          setStatusMessage('Verifying payment...');
           try {
+            console.log('Payment response:', response);
+            
             // Verify payment
             const verificationResult = await verifyPayment({
               razorpay_order_id: response.razorpay_order_id,
@@ -93,38 +162,61 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
               razorpay_signature: response.razorpay_signature
             });
 
+            console.log('Verification result:', verificationResult);
+
             if (verificationResult.status === 'ok') {
-              alert('Thank you for your donation! Your payment was successful.');
-              onClose();
-              // Reset form
-              setAmount('');
-              setCustomAmount('');
-              setDonorName('');
-              setDonorEmail('');
-              setDonorPhone('');
+              setStatusMessage('Payment successful! Thank you for your donation.');
+              setTimeout(() => {
+                onClose();
+                resetForm();
+              }, 2000);
             } else {
-              alert('Payment verification failed. Please contact support.');
+              setStatusMessage('Payment verification failed. Please contact support.');
             }
           } catch (error) {
             console.error('Payment verification error:', error);
-            alert('Payment verification failed. Please contact support.');
+            setStatusMessage('Payment verification failed. Please contact support.');
           }
+          setIsProcessing(false);
         },
         modal: {
           ondismiss: function() {
             setIsProcessing(false);
+            setStatusMessage('Payment cancelled');
           }
         }
       };
 
       const rzp = new window.Razorpay(options);
+      
+      rzp.on('payment.failed', function (response: any) {
+        console.error('Payment failed:', response.error);
+        setStatusMessage(`Payment failed: ${response.error.description}`);
+        setIsProcessing(false);
+      });
+
       rzp.open();
-      setIsProcessing(false);
 
     } catch (error) {
       console.error('Payment error:', error);
-      alert('Failed to initiate payment. Please try again.');
+      setStatusMessage(error instanceof Error ? error.message : 'Failed to initiate payment. Please try again.');
       setIsProcessing(false);
+    }
+  };
+
+  const resetForm = () => {
+    setAmount('');
+    setCustomAmount('');
+    setDonorName('');
+    setDonorEmail('');
+    setDonorPhone('');
+    setStatusMessage('');
+  };
+
+  const handleClose = () => {
+    if (!isProcessing) {
+      resetForm();
+      onClose();
     }
   };
 
@@ -143,12 +235,54 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
               <h2 className="text-2xl font-bold text-gray-800">Make a Donation</h2>
             </div>
             <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              onClick={handleClose}
+              disabled={isProcessing}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50"
             >
               <X size={24} className="text-gray-500" />
             </button>
           </div>
+
+          {/* Server Status */}
+          {!serverStatus && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <div className="flex items-center space-x-2">
+                <AlertCircle className="text-red-500" size={20} />
+                <span className="text-red-700 font-medium">Server Unavailable</span>
+              </div>
+              <p className="text-red-600 text-sm mt-1">
+                Payment server is not running. Please start the backend server first.
+              </p>
+            </div>
+          )}
+
+          {/* Status Message */}
+          {statusMessage && (
+            <div className={`rounded-lg p-4 mb-6 ${
+              statusMessage.includes('successful') || statusMessage.includes('Thank you')
+                ? 'bg-green-50 border border-green-200'
+                : statusMessage.includes('failed') || statusMessage.includes('error') || statusMessage.includes('unavailable')
+                ? 'bg-red-50 border border-red-200'
+                : 'bg-blue-50 border border-blue-200'
+            }`}>
+              <div className="flex items-center space-x-2">
+                {statusMessage.includes('successful') ? (
+                  <CheckCircle className="text-green-500" size={20} />
+                ) : statusMessage.includes('failed') || statusMessage.includes('error') ? (
+                  <AlertCircle className="text-red-500" size={20} />
+                ) : (
+                  <Loader className="text-blue-500 animate-spin" size={20} />
+                )}
+                <span className={`font-medium ${
+                  statusMessage.includes('successful') ? 'text-green-700'
+                  : statusMessage.includes('failed') || statusMessage.includes('error') ? 'text-red-700'
+                  : 'text-blue-700'
+                }`}>
+                  {statusMessage}
+                </span>
+              </div>
+            </div>
+          )}
 
           {/* Amount Selection */}
           <div className="mb-6">
@@ -160,7 +294,8 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
                 <button
                   key={amt}
                   onClick={() => handleAmountSelect(amt)}
-                  className={`p-3 rounded-lg border-2 font-semibold transition-colors ${
+                  disabled={isProcessing}
+                  className={`p-3 rounded-lg border-2 font-semibold transition-colors disabled:opacity-50 ${
                     amount === amt
                       ? 'border-blue-500 bg-blue-50 text-blue-600'
                       : 'border-gray-200 hover:border-gray-300'
@@ -179,7 +314,8 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
                 value={customAmount}
                 onChange={(e) => handleCustomAmountChange(e.target.value)}
                 placeholder="Enter amount"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                disabled={isProcessing}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
                 min="1"
               />
             </div>
@@ -196,7 +332,8 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
                 value={donorName}
                 onChange={(e) => setDonorName(e.target.value)}
                 placeholder="Enter your full name"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                disabled={isProcessing}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
                 required
               />
             </div>
@@ -209,7 +346,8 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
                 value={donorEmail}
                 onChange={(e) => setDonorEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                disabled={isProcessing}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
                 required
               />
             </div>
@@ -222,7 +360,8 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
                 value={donorPhone}
                 onChange={(e) => setDonorPhone(e.target.value)}
                 placeholder="Enter your phone number"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                disabled={isProcessing}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
               />
             </div>
           </div>
@@ -240,7 +379,7 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
           {/* Donate Button */}
           <button
             onClick={handleDonate}
-            disabled={!getFinalAmount() || !donorName || !donorEmail || isProcessing}
+            disabled={!getFinalAmount() || !donorName || !donorEmail || isProcessing || !serverStatus}
             className="w-full bg-gradient-to-r from-blue-600 to-green-500 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-green-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
           >
             {isProcessing ? (
