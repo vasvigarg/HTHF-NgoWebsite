@@ -1,6 +1,15 @@
-import React from 'react';
-import { Heart, Phone, Mail, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
-import DonationModal from './DonationModal';
+import React from "react";
+import {
+  Heart,
+  Phone,
+  Mail,
+  MapPin,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+} from "lucide-react";
+import DonationModal from "./DonationModal";
 
 const Footer: React.FC = () => {
   const [isDonationModalOpen, setIsDonationModalOpen] = React.useState(false);
@@ -21,21 +30,33 @@ const Footer: React.FC = () => {
               </div>
             </div>
             <p className="text-gray-300 leading-relaxed mb-6 max-w-lg">
-              Supporting families through chronic disease with comprehensive care, 
-              compassion, and hope. Together, we believe healing happens not just 
-              for patients, but for entire families.
+              Supporting families through chronic disease with comprehensive
+              care, compassion, and hope. Together, we believe healing happens
+              not just for patients, but for entire families.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="bg-gray-700 p-3 rounded-full hover:bg-blue-600 transition-colors">
+              <a
+                href="#"
+                className="bg-gray-700 p-3 rounded-full hover:bg-blue-600 transition-colors"
+              >
                 <Facebook size={20} />
               </a>
-              <a href="#" className="bg-gray-700 p-3 rounded-full hover:bg-blue-400 transition-colors">
+              <a
+                href="#"
+                className="bg-gray-700 p-3 rounded-full hover:bg-blue-400 transition-colors"
+              >
                 <Twitter size={20} />
               </a>
-              <a href="#" className="bg-gray-700 p-3 rounded-full hover:bg-pink-600 transition-colors">
+              <a
+                href="#"
+                className="bg-gray-700 p-3 rounded-full hover:bg-pink-600 transition-colors"
+              >
                 <Instagram size={20} />
               </a>
-              <a href="#" className="bg-gray-700 p-3 rounded-full hover:bg-blue-700 transition-colors">
+              <a
+                href="#"
+                className="bg-gray-700 p-3 rounded-full hover:bg-blue-700 transition-colors"
+              >
                 <Linkedin size={20} />
               </a>
             </div>
@@ -45,12 +66,54 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-3">
-              <li><a href="#about" className="text-gray-300 hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#services" className="text-gray-300 hover:text-white transition-colors">Services</a></li>
-              <li><a href="#impact" className="text-gray-300 hover:text-white transition-colors">Impact</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Resources</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Support Groups</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Events</a></li>
+              <li>
+                <a
+                  href="#about"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  About Us
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#services"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  Services
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#impact"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  Impact
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  Resources
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  Support Groups
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  Events
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -60,7 +123,12 @@ const Footer: React.FC = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Phone size={16} className="text-gray-400" />
-                <a href="tel:9212850560" className="text-gray-300 hover:text-white transition-colors">9212850560</a>
+                <a
+                  href="tel:9212850560"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  9212850560
+                </a>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail size={16} className="text-gray-400" />
@@ -68,16 +136,20 @@ const Footer: React.FC = () => {
               </div>
               <div className="flex items-start space-x-3">
                 <MapPin size={16} className="text-gray-400 mt-1" />
-                <span className="text-gray-300">123 Healing Way<br />Compassion City, CC 12345</span>
+                <span className="text-gray-300">
+                  123 Healing Way
+                  <br />
+                  Compassion City, CC 12345
+                </span>
               </div>
             </div>
             <div className="mt-6">
-              <button 
-                onClick={() => setIsDonationModalOpen(true)}
-                className="bg-gradient-to-r from-blue-600 to-green-500 text-white px-6 py-3 rounded-full font-semibold hover:from-blue-700 hover:to-green-600 transition-all"
+              <a
+                href="tel:9212850560"
+                className="bg-gradient-to-r from-blue-600 to-green-500 text-white px-6 py-3 rounded-full font-semibold hover:from-blue-700 hover:to-green-600 transition-all inline-block text-center"
               >
                 Get Support Now
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -88,17 +160,32 @@ const Footer: React.FC = () => {
               © 2024 Hands That Heal Foundation. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Privacy Policy</a>
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Terms of Service</a>
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Accessibility</a>
+              <a
+                href="#"
+                className="text-gray-400 hover:text-white text-sm transition-colors"
+              >
+                Privacy Policy
+              </a>
+              <a
+                href="#"
+                className="text-gray-400 hover:text-white text-sm transition-colors"
+              >
+                Terms of Service
+              </a>
+              <a
+                href="#"
+                className="text-gray-400 hover:text-white text-sm transition-colors"
+              >
+                Accessibility
+              </a>
             </div>
           </div>
         </div>
       </div>
-      
-      <DonationModal 
-        isOpen={isDonationModalOpen} 
-        onClose={() => setIsDonationModalOpen(false)} 
+
+      <DonationModal
+        isOpen={isDonationModalOpen}
+        onClose={() => setIsDonationModalOpen(false)}
       />
     </footer>
   );

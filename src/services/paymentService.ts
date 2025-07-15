@@ -21,48 +21,52 @@ export interface VerifyPaymentRequest {
 }
 
 // Backend API base URL
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = "https://hthf-ngowebsite.onrender.com/api";
 
-export const createOrder = async (orderData: CreateOrderRequest): Promise<CreateOrderResponse> => {
+export const createOrder = async (
+  orderData: CreateOrderRequest
+): Promise<CreateOrderResponse> => {
   try {
     const response = await fetch(`${API_BASE_URL}/create-order`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(orderData),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to create order');
+      throw new Error(errorData.error || "Failed to create order");
     }
 
     return await response.json();
   } catch (error) {
-    console.error('Error creating order:', error);
+    console.error("Error creating order:", error);
     throw error;
   }
 };
 
-export const verifyPayment = async (paymentData: VerifyPaymentRequest): Promise<{ status: string }> => {
+export const verifyPayment = async (
+  paymentData: VerifyPaymentRequest
+): Promise<{ status: string }> => {
   try {
     const response = await fetch(`${API_BASE_URL}/verify-payment`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(paymentData),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || 'Payment verification failed');
+      throw new Error(errorData.message || "Payment verification failed");
     }
 
     return await response.json();
   } catch (error) {
-    console.error('Error verifying payment:', error);
+    console.error("Error verifying payment:", error);
     throw error;
   }
 };
@@ -73,7 +77,7 @@ export const checkServerHealth = async (): Promise<boolean> => {
     const response = await fetch(`${API_BASE_URL}/health`);
     return response.ok;
   } catch (error) {
-    console.error('Server health check failed:', error);
+    console.error("Server health check failed:", error);
     return false;
   }
 };
